@@ -45,6 +45,33 @@ ChatBot::~ChatBot()
 //// STUDENT CODE
 ////
 
+ChatBot::ChatBot(ChatBot& other){    // move constructor
+    std::cout << "ChatBot move constructor" << std::endl;
+    if(this != &other){ // do not move if own instance is passed
+        this->_image = other._image;
+        this->_chatLogic = other._chatLogic;
+        this->_rootNode = other._rootNode;
+        
+        other._image = NULL;
+        other._chatLogic = nullptr;
+        other._rootNode = nullptr;
+    }
+}
+
+ChatBot& ChatBot::operator=(ChatBot&& other){ // move assignment
+    std::cout << "ChatBot move assignment" << std::endl;
+    if(this != &other){ // do not move if own instance is passed
+        this->_image = other._image;
+        this->_chatLogic = other._chatLogic;
+        this->_rootNode = other._rootNode;
+        
+        other._image = NULL;
+        other._chatLogic = nullptr;
+        other._rootNode = nullptr;
+    }
+    return *this;
+}
+
 ////
 //// EOF STUDENT CODE
 
