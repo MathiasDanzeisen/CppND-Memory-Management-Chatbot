@@ -2,6 +2,7 @@
 #include <random>
 #include <algorithm>
 #include <ctime>
+#include <memory>
 
 #include "chatlogic.h"
 #include "graphnode.h"
@@ -15,6 +16,7 @@ ChatBot::ChatBot()
     _image = nullptr;
     _chatLogic = nullptr;
     _rootNode = nullptr;
+    _currentNode = nullptr;
 }
 
 // constructor WITH memory allocation
@@ -25,21 +27,15 @@ ChatBot::ChatBot(std::string filename)
     // invalidate data handles
     _chatLogic = nullptr;
     _rootNode = nullptr;
+    _currentNode = nullptr;
 
     // load image into heap memory
-    _image = new wxBitmap(filename, wxBITMAP_TYPE_PNG);
+    _image = std::make_shared<wxBitmap>(filename, wxBITMAP_TYPE_PNG);
 }
 
 ChatBot::~ChatBot()
 {
     std::cout << "ChatBot Destructor" << std::endl;
-
-    // deallocate heap memory
-    if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
-    {
-        delete _image;
-        _image = NULL;
-    }
 }
 
 //// STUDENT CODE
@@ -56,13 +52,17 @@ ChatBot::ChatBot(const ChatBot& other){    // copy constructor
 ChatBot::ChatBot(ChatBot& other){    // move constructor
     std::cout << "ChatBot move constructor" << std::endl;
     if(this != &other){ // do not move if own instance is passed
-        this->_image = other._image;
         this->_chatLogic = other._chatLogic;
+        this->_image = std::move(other._image);
         this->_rootNode = other._rootNode;
+        this->_currentNode = other._currentNode;
+        this->_chatLogic->SetChatbotHandle(this);
+
         
-        other._image = NULL;
+        //other._image = NULL;
         other._chatLogic = nullptr;
         other._rootNode = nullptr;
+        other._currentNode = nullptr;
     }
 }
 
@@ -72,6 +72,8 @@ ChatBot& ChatBot::operator=(const ChatBot& other){ // copy assignment
         this->_image = other._image;
         this->_chatLogic = other._chatLogic;
         this->_rootNode = other._rootNode;
+        this->_currentNode = other._currentNode;
+
     }
     return *this;
 }
@@ -79,13 +81,19 @@ ChatBot& ChatBot::operator=(const ChatBot& other){ // copy assignment
 ChatBot& ChatBot::operator=(ChatBot&& other){ // move assignment
     std::cout << "ChatBot move assignment" << std::endl;
     if(this != &other){ // do not move if own instance is passed
-        this->_image = other._image;
+        this->_image = std::move(other._image);
         this->_chatLogic = other._chatLogic;
         this->_rootNode = other._rootNode;
+        this->_currentNode = other._currentNode;
+        this->_chatLogic->SetChatbotHandle(this);
+
+
         
-        other._image = NULL;
+        //other._image = NULL;
         other._chatLogic = nullptr;
         other._rootNode = nullptr;
+        other._currentNode = nullptr;
+
     }
     return *this;
 }

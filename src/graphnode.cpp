@@ -33,16 +33,20 @@ void GraphNode::AddEdgeToChildNode(std::unique_ptr<GraphEdge>  edge)
 
 //// STUDENT CODE
 ////
-void GraphNode::MoveChatbotHere( std::unique_ptr<ChatBot> chatbot)
+void GraphNode::MoveChatbotHere( ChatBot&& chatbot)
 {
-    _chatBot = std::move(chatbot);
-    _chatBot->SetCurrentNode(this);
+    chatbot.SetCurrentNode(this);
+
+    _chatBot = ChatBot(chatbot);
+    
+
+    // auto lchatlogicHandle = (_chatBot.GetChatLogicHandle());
+    //lchatlogicHandle->SetChatbotHandle(& _chatBot);
 }
 
 void GraphNode::MoveChatbotToNewNode(GraphNode *newNode)
 {
     newNode->MoveChatbotHere(std::move(_chatBot));
-    _chatBot = nullptr; // invalidate pointer at source
 }
 ////
 //// EOF STUDENT CODE
