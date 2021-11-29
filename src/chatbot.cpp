@@ -43,7 +43,7 @@ ChatBot::~ChatBot()
 ChatBot::ChatBot(const ChatBot& other){    // copy constructor
     std::cout << "ChatBot copy constructor" << std::endl;
     if(this != &other){ // do not copy if own instance is passed
-        this->_image = other._image;
+        this->_image = std::make_shared<wxBitmap>(*(other._image.get())); // deep copy
         this->_chatLogic = other._chatLogic;
         this->_rootNode = other._rootNode;
     }
@@ -69,7 +69,7 @@ ChatBot::ChatBot(ChatBot& other){    // move constructor
 ChatBot& ChatBot::operator=(const ChatBot& other){ // copy assignment
     std::cout << "ChatBot copy assignment" << std::endl;
     if(this != &other){ // do not copy if own instance is passed
-        this->_image = other._image;
+        this->_image = std::make_shared<wxBitmap>(*(other._image.get())); // deep copy
         this->_chatLogic = other._chatLogic;
         this->_rootNode = other._rootNode;
         this->_currentNode = other._currentNode;
